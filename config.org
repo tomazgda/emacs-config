@@ -1,0 +1,173 @@
+#+title: Emacs Configuration
+
+* Introduction
+
+  My emacs configs usually end up spawling uncontrollably. So, here, and hopefully this is the last time I say this, will be a well managed configuration file. 
+
+* Notes To Self 
+
+** Org Mode 
+  - 'org-edit-special' can be run with C-c '
+** Bookmarks 
+  - 'C-x r m' - set a bookmark
+  - 'C-x r b' - jump to a bookmark
+  - 'C-x r l' - list bookmarks
+  - 'M-x bookmark-delete' 
+** Describing
+   - 'C-h v' - describe variable
+   - 'C-h f' - decribe function 
+** Dired
+   - 'C-x d' - dired
+** Documentation
+   - 'C-h d' - search documentation 
+      
+* Straight Bootstrap 
+
+  #+begin_src elisp
+
+    (defvar bootstrap-version)
+    (let ((bootstrap-file
+	   (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	  (bootstrap-version 5))
+      (unless (file-exists-p bootstrap-file)
+	(with-current-buffer
+	    (url-retrieve-synchronously
+	     "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	     'silent 'inhibit-cookies)
+	  (goto-char (point-max))
+	  (eval-print-last-sexp)))
+      (load bootstrap-file nil 'nomessage))
+
+  #+end_src
+
+* Packages
+
+  #+begin_src elisp
+
+    (straight-use-package 'prescient)
+    (straight-use-package 'selectrum-prescient)
+    (straight-use-package 'selectrum)
+    (straight-use-package
+     '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
+    (straight-use-package 'org-bullets)
+    (straight-use-package 'svg-tag-mode)
+  #+end_src
+
+* Nano Emacs
+
+  [[https://github.com/rougier/nano-emacs]]
+
+  Found, while browsing [[https:www.reddit.com/r/emacs][r/emacs]] the user [[https://www.reddit.com/user/Nicolas-Rougie/r][u/Nicolos-Rougier]], who's github contains [[https://github.com/rougier/nano-emacs][nano-emacs]].
+  Essentially, nano-emacs provides a great look and feel.
+
+  ** Variables 
+
+   #+begin_src elisp
+
+     (setq nano-font-family-monospaced "Monaco")
+     (setq nano-font-family-proportional nil)
+
+     (setq nano-font-sisze 14)
+
+   #+end_src
+   
+** Enabling Modules  
+   
+  #+begin_src elisp
+
+    (require 'nano-layout)
+    (require 'nano-theme-light)
+					    ;    (require 'nano-theme-dark)
+    (require 'nano-faces)
+    (nano-faces)
+
+    (require 'nano-theme)
+    (nano-theme)
+
+    (require 'nano-modeline)
+    (require 'nano-splash)
+    (require 'nano-help)
+
+    (add-to-list 'load-path "~/.emacs.d/notebook-mode/")
+    (require 'notebook)
+
+  #+end_src
+  
+  
+* Startup Visuals
+
+  Everything that is made immeidately visually apparent. The menu and tool bar can go for sure; the scroll bar I sometimes keep. 
+
+  #+begin_src elisp
+
+    (global-hl-line-mode +1) 
+    (menu-bar-mode -1)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)
+    (setq inhibit-startup-message t)
+
+  #+end_src
+
+
+* Org Mode
+
+** Aesthetics 
+
+   #+begin_src elisp
+
+     (setq org-emphasis-alist
+	   '(("*" (bold :foreground "dark red" )) 
+	     ("/" (italic :foreground "dark salmon" ))))
+
+     (setq org-hide-emphasis-markers t) 
+
+   #+end_src
+   
+** Function
+
+  #+begin_src elisp
+
+    (setq org-support-shift-select t)
+    (setq org-src-fontify-natively t)
+    (setq org-startup-folded nil)
+    (setq org-return-follows-link t)
+    (setq org-startup-truncated nil)
+    (setq org-startup-with-inline-images t)
+    
+  #+end_src
+
+  *** Hooks
+
+  #+begin_src elisp
+
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+  #+end_src
+
+* Completion
+
+  Using Selectrum for completion with prescient to sort list of candidates. 
+  
+  #+begin_src elisp
+
+    (selectrum-mode +1)
+    (selectrum-prescient-mode +1)
+    (prescient-persist-mode +1)
+
+  #+end_src
+
+* SVG Tags
+
+  #+begin_src elisp
+
+    (setq svg-tag-tags
+      '((":TODO:" . ((lambda (tag) (svg-tag-make tag))))))
+
+    (setq svg-tag-tags
+	  '((":HELLO:" .  ((lambda (tag) (svg-tag-make "HELLO"))
+			   (lambda () (interactive) (message "Hello world!"))
+			   "Print a greeting message"))))
+
+  #+end_src
+
+
