@@ -19,7 +19,7 @@
 ** Dired
    - 'C-x d' - dired
 ** Documentation
-   - 'C-h d' - search documentation 
+   - 'C-h d' - search documentation  
       
 * Straight Bootstrap 
 
@@ -50,7 +50,13 @@
     (straight-use-package
      '(nano-emacs :type git :host github :repo "rougier/nano-emacs"))
     (straight-use-package 'org-bullets)
+    (straight-use-package 'svg-lib)
     (straight-use-package 'svg-tag-mode)
+    (straight-use-package 'racket-mode)
+    (straight-use-package 'visual-fill-column)
+    (straight-use-package 'company)
+
+
   #+end_src
 
 * Nano Emacs
@@ -90,6 +96,9 @@
 
     (add-to-list 'load-path "~/.emacs.d/notebook-mode/")
     (require 'notebook)
+
+    (add-to-list 'load-path "~/.emacs.d/nano-agenda/")
+    (require 'nano-agenda)
 
   #+end_src
   
@@ -136,11 +145,30 @@
     
   #+end_src
 
-  *** Hooks
+** Olivetti Mode
 
+   #+begin_src elisp
+
+     (add-to-list 'load-path "~/.emacs.d/olivetti")
+     (require 'olivetti)
+
+     (setq olivetti-body-width 150)
+
+     ; (add-hook 'org-mode-hook 'olivetti-mode)
+
+   #+end_src
+   
+** Hooks 
+   
   #+begin_src elisp
 
+    (setq-default fill-column 150)
+
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+    (add-hook 'org-mode-hook (lambda () (visual-line-mode 1)))
+    (add-hook 'org-mode-hook (lambda () (visual-fill-column-mode 1)))
+
+    (add-hook 'after-init-hook 'global-company-mode)
 
   #+end_src
 
@@ -161,13 +189,12 @@
   #+begin_src elisp
 
     (setq svg-tag-tags
-      '((":TODO:" . ((lambda (tag) (svg-tag-make tag))))))
-
-    (setq svg-tag-tags
-	  '((":HELLO:" .  ((lambda (tag) (svg-tag-make "HELLO"))
-			   (lambda () (interactive) (message "Hello world!"))
-			   "Print a greeting message"))))
+	  '((":DONE:" . ((lambda (tag) (insert-image (svg-lib-button "check-bold" "DONE " nil
+								     :font-family "Roboto Mono"
+								     :font-weight 500
+								     :stroke 0 :background "#673AB7" :foreground "white")))))))
 
   #+end_src
 
 
+  
